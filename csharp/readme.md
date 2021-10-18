@@ -109,3 +109,27 @@ Extension methods enable you to "add" methods to existing types without creating
           }
       }
   }
+
+# Lambda Expressions
+
+You use a lambda expression to create an anonymous function.
+
+Expression lambda that has an expression as its body:
+  (input-parameters) => expression
+
+Statement lambda that has a statement block as its body:
+  (input-parameters) => { <sequence-of-statements> }
+
+Any lambda expression can be converted to a delegate type. The delegate type to which a lambda expression can be converted is defined by the types of its parameters and return value. If a lambda expression doesn't return a value, it can be converted to one of the Action delegate types;
+
+// delegate type
+Func<int, int> square = x => x * x;
+Console.WriteLine(square(5));
+// Output:
+// 25
+
+// expression tree 
+System.Linq.Expressions.Expression<Func<int, int>> e = x => x * x;
+Console.WriteLine(e);
+// Output:
+// x => (x * x)
