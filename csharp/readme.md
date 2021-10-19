@@ -147,4 +147,4 @@ A readonly field can be assigned and reassigned multiple times within the field 
 A readonly field can't be assigned after the constructor exits. This rule has different implications for value types and reference types:
 
     Because value types directly contain their data, a field that is a readonly value type is immutable.
-    Because reference types contain a reference to their data, a field that is a readonly reference type must always refer to the same object. That object isn't immutable. The readonly modifier prevents the field from being replaced by a different instance of the reference type. However, the modifier doesn't prevent the instance data of the field from being modified through the read-only field.
+    Because reference types contain a reference to their data, a field that is a readonly reference type must always refer to the same object. That object isn't immutable. The readonly modifier prevents the field from being replaced by a different instance of the reference type. However, the modifier doesn't prevent the instance data of the field from being modified through the read-only field. 
