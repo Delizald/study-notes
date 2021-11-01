@@ -61,3 +61,7 @@ Non-interactive (system to system)
 Microservices
 Simple Object Hierarchy
 Repeated, simple queries
+
+
+## Query Mutation and Subscription
+
