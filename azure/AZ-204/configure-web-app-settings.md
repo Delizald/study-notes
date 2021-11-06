@@ -158,3 +158,100 @@ n the App Service file system, these log files are the contents of the /home/Log
 ## Configure security certificates
 
 A certificate uploaded into an app is stored in a deployment unit that is bound to the app service plan's resource group and region combination (internally called a webspace). This makes the certificate accessible to other apps in the same resource group and region combination.
+
+#TODO: Resume options for adding certificates in Azure
+
+### Private certificate requirements
+
+If you want to use a private certificate in App Service, your certificate must meet the following requirements:
+
+Exported as a password-protected PFX file, encrypted using triple DES.
+Contains private key at least 2048 bits long
+Contains all intermediate certificates in the certificate chain
+
+To secure a custom domain in a TLS binding, the certificate has additional requirements:
+
+Contains an Extended Key Usage for server authentication (OID = 1.3.6.1.5.5.7.3.1)
+Signed by a trusted certificate authority
+
+### Creating a free managed certificate
+
+your App Service plan must be in the Basic, Standard, Premium, or Isolated tier. Custom SSL is not supported in the F1 or D1 tier.
+
+The free certificate comes with the following limitations:
+
+Does not support wildcard certificates.
+Does not support usage as a client certificate by certificate thumbprint.
+Is not exportable.
+Is not supported on App Service Environment (ASE).
+Is not supported with root domains that are integrated with Traffic Manager.
+If a certificate is for a CNAME-mapped domain, the CNAME must be mapped directly to <app-name>.azurewebsites.net.
+
+### Import an App Service Certificate
+
+If you purchase an App Service Certificate from Azure, Azure manages the following tasks:
+
+Takes care of the purchase process from GoDaddy.
+Performs domain verification of the certificate.
+Maintains the certificate in Azure Key Vault.
+Manages certificate renewal.
+Synchronize the certificate automatically with the imported copies in App Service apps.
+
+If you already have a working App Service certificate, you can:
+
+Import the certificate into App Service.
+Manage the certificate, such as renew, rekey, and export it.
+
+App Service Certificates are not supported in Azure National Clouds at this time.
+
+### Upload a private certificate
+
+If you generated your certificate request using OpenSSL, then you have created a private key file. To export your certificate to PFX, run the following command. Replace the placeholders <private-key-file> and <merged-certificate-file> with the paths to your private key and your merged certificate file.
+
+openssl pkcs12 -export -out myserver.pfx -inkey <private-key-file> -in <merged-certificate-file>
+
+### Enforce HTTPS
+
+By default, anyone can still access your app using HTTP. You can redirect all HTTP requests to the HTTPS port by navigating to your your app page and, in the left navigation, select TLS/SSL settings. Then, in HTTPS Only, select On.
+
+
+## Manage app features
+
+Feature management is a modern software-development practice that decouples feature release from code deployment and enables quick changes to feature availability on demand.
+
+Feature flag: A feature flag is a variable with a binary state of on or off. The feature flag also has an associated code block. The state of the feature flag triggers whether the code block runs or not.
+Feature manager: A feature manager is an application package that handles the lifecycle of all the feature flags in an application. The feature manager typically provides additional functionality, such as caching feature flags and updating their states.
+Filter: A filter is a rule for evaluating the state of a feature flag. A user group, a device or browser type, a geographic location, and a time window are all examples of what a filter can represent.
+
+The basic pattern for implementing feature flags in an application is simple. You can think of a feature flag as a Boolean state variable used with an if conditional statement in your code.
+
+### Feature flag declaration
+
+Each feature flag has two parts: a name and a list of on one or more filters.
+When a feature flag has multiple filters, the filter list is traversed in order until one of the filters determines the feature should be enabled.
+If no filter indicates the feature should be enabled, the feature flag is off.
+The feature manager supports appsettings.json as a configuration source for feature flags. The following example shows how to set up feature flags in a JSON file:
+
+  "FeatureManagement": {
+    "FeatureA": true, // Feature flag set to on
+    "FeatureB": false, // Feature flag set to off
+    "FeatureC": {
+        "EnabledFor": [
+            {
+                "Name": "Percentage",
+                "Parameters": {
+                    "Value": 50
+                }
+            }
+        ]
+    }
+}
+
+## Knowledge check
+
+1. In which of the app configuration settings categories below would you set the language and SDK version
+  General Settings
+2. Which of the following types of application logging is supported on the Linux platform?
+  Deployment logging
+3. Which of the following choices correctly lists the two parts of a feature flag?
+Name, one or more filters
