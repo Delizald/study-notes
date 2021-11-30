@@ -2,4 +2,4 @@
 npx create-react-app  project-name
 
 ### declarative approach
-define the desired target state and let React figure out the JavaScriot DOM instructions
+define the desired target state and let React figure out the JavaSctript DOM instructions
