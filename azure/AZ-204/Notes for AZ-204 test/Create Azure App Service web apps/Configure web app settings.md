@@ -1,4 +1,4 @@
-## Objetives
+# Objetives
 After completing this module, you'll be able to:
 
 - Create application settings that are bound to deployment slots.
@@ -6,7 +6,7 @@ After completing this module, you'll be able to:
 - Enable diagnostic logging for your app to aid in monitoring and debugging.
 - Create virtual app to directory mappings.
 
-## Configure application settings
+# Configure application settings
 app settings are variables passed as environment variables to the application code. For Linux apps and custom containers, App Service passes app settings to the container using the --env flag to set the environment variable in the container.
 
 Application settings can be accessed by navigating to your app's management page and selecting **Configuration > Application Settings**.
@@ -202,4 +202,77 @@ To create custom SSL your App Service plan must be in the Basic, Standard, Premi
 The free App Service managed certificate it is fully managed by App Service and renewed continuously and automatically in six-month increments, 45 days before expiration. You create the certificate and bind it to a custom domain, and let App Service do the rest.
 
 ## Free cert limitations:
+
+Does not support wildcard certificates.
+Does not support usage as a client certificate by certificate thumbprint.
+Is not exportable.
+Is not supported on App Service Environment (ASE).
+Is not supported with root domains that are integrated with Traffic Manager.
+If a certificate is for a CNAME-mapped domain, the CNAME must be mapped directly to `app-name.azurewebsites.net`.
+
+## Import an App Service Certificate
+If you purchase an App Service Certificate from Azure, Azure manages the following tasks:
+
+- Takes care of the purchase process from GoDaddy.
+- Performs domain verification of the certificate.
+- Maintains the certificate in Azure Key Vault.
+- Manages certificate renewal.
+- Synchronize the certificate automatically with the imported copies in App Service apps.
+
+## Upload a private certificate
+
+If you generated your certificate request using OpenSSL, then you have created a private key file. To export your certificate to PFX, run the following command:
+
+`openssl pkcs12 -export -out myserver.pfx -inkey <private-key-file> -in <merged-certificate-file>`
+
+When prompted, define an export password. You'll use this password when uploading your TLS/SSL certificate to App Service.
+
+## Enforce HTTPS
+navigate to your app page and, in the left navigation, select **TLS/SSL** settings. Then, in **HTTPS Only**, select **On**.
+
+# Manage app features
+Feature management uses a technique called feature flags (also known as feature toggles, feature switches, and so on) to dynamically administer a feature's lifecycle.
+
+## Basic concepts
+- **Feature flag**: A feature flag is a variable with a binary state of on or off. The feature flag also has an associated code block. The state of the feature flag triggers whether the code block runs or not.
+- **Feature manager**: A feature manager is an application package that handles the lifecycle of all the feature flags in an application. The feature manager typically provides additional functionality, such as caching feature flags and updating their states.
+- **Filter**: A filter is a rule for evaluating the state of a feature flag. A user group, a device or browser type, a geographic location, and a time window are all examples of what a filter can represent.
+
+An effective implementation of feature management consists of at least:
+- An application that makes use of feature flags.
+- A separate repository that stores the feature flags and their current states.
+
+## Feature flag usage in code
+`if (featureFlag) {
+  // Run the following code
+}`
+
+## Feature flag declaration
+When a feature flag has multiple filters, the filter list is traversed in order until one of the filters determines the feature should be enabled. 
+The feature manager supports appsettings.json as a configuration source for feature flags. The following example shows how to set up feature flags in a JSON file:
+
+"FeatureManagement": {
+    "FeatureA": true, // Feature flag set to on
+    "FeatureB": false, // Feature flag set to off
+    "FeatureC": {
+        "EnabledFor": [
+            {
+                "Name": "Percentage",
+                "Parameters": {
+                    "Value": 50
+                }
+            }
+        ]
+    }
+}
+
+## Feature flag repository
+To use feature flags effectively, you need to externalize all the feature flags used in an application.
+
+## Knowledge check
+- In which of the app configuration settings categories below would you set the language and SDK version? General settings (This category is used to configure stack, platform, debugging, and incoming client certificate settings.)
+- Which of the following types of application logging is supported on the Linux platform? Deployment logging
+- Which of the following choices correctly lists the two parts of a feature flag?
+- Name, one or more filters
+
 
