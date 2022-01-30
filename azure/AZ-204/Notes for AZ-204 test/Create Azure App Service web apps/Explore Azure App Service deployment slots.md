@@ -104,3 +104,71 @@ To configure auto swap:
 - Execute a code push to the source slot. Auto swap happens after a short time, and the update is reflected at your target slot's URL.
 
 ## Specify custom warm-up
+The `applicationInitialization` configuration element in web.config lets you specify custom initialization actions. The swap operation waits for this custom warm-up to finish before swapping with the target slot
+Sample:
+```
+<system.webServer>
+    <applicationInitialization>
+        <add initializationPage="/" hostName="[app hostname]" />
+        <add initializationPage="/Home/About" hostName="[app hostname]" />
+    </applicationInitialization>
+</system.webServer>
+```
+
+For more information on customizing the applicationInitialization element, see **Most common deployment slot swap failures and how to fix them (https://ruslany.net/2017/11/most-common-deployment-slot-swap-failures-and-how-to-fix-them/)**.
+
+You can also customize the warm-up behavior with one or both of the following app settings:
+
+- `WEBSITE_SWAP_WARMUP_PING_PATH`: The path to ping to warm up your site. Add this app setting by specifying a custom path that begins with a slash as the value. An example is /statuscheck. The default value is /.
+- `WEBSITE_SWAP_WARMUP_PING_STATUSES`: Valid HTTP response codes for the warm-up operation. Add this app setting with a comma-separated list of HTTP codes. An example is 200,202 . If the returned status code isn't in the list, the warmup and swap operations are stopped. By default, all response codes are valid.
+
+## Roll back and monitor a swap
+If any errors occur in the target slot (for example, the production slot) after a slot swap, restore the slots to their pre-swap states by swapping the same two slots immediately.
+
+you can get information on the swap operation in the activity log ->On your app's resource page in the portal, in the left pane, select `Activity log`.
+A swap operation appears in the log query as Swap Web App Slots.
+
+# Route traffic in App Service
+
+By default, all client requests to the app's production URL (http://<app_name>.azurewebsites.net) are routed to the production slot.
+
+## Route production traffic automatically
+- Go to your app's resource page and select **Deployment slots**.
+- In the **Traffic** % column of the slot you want to route to, specify a percentage (between 0 and 100) to represent the amount of total traffic you want to route. Select **Save**.
+
+the specified percentage of clients is randomly routed to the non-production slot.
+
+After a client is automatically routed to a specific slot, it's "pinned" to that slot for the life of that client session.
+
+On the client browser, you can see which slot your session is pinned to by looking at the `x-ms-routing-name` cookie in your HTTP headers.
+
+staging slot -> x-ms-routing-name=staging
+production slot -> x-ms-routing-name=self
+
+## Route production traffic manually
+This is useful when you want your users to be able to opt in to or opt out of your beta app.
+
+To route production traffic manually, you use the `x-ms-routing-name` query parameter.
+
+To let users opt out of your beta app, for example, you can put this link on your webpage:
+
+```<a href="<webappname>.azurewebsites.net/?x-ms-routing-name=self">Go back to production app</a>```
+
+After the client browser accesses the link every subsequent request has the `x-ms-routing-name=self` cookie that pins the session to the production slot.
+
+To let users opt in to your beta app, set the same query parameter to the name of the non-production slot. Here's an example:
+
+```<webappname>.azurewebsites.net/?x-ms-routing-name=staging```
+
+By default, new slots are given a routing rule of 0%.
+
+# Knowledge check
+
+1. By default, all client requests to the app's production URL (http://<app_name>.azurewebsites.net) are routed to the production slot. One can automatically route a portion of the traffic to another slot. What is the default routing rule applied to new deployment slots? 
+
+
+0%
+
+2. Some configuration elements follow the content across a swap (not slot specific), whereas other configuration elements stay in the same slot after a swap (slot specific). Which of the settings below are swapped?
+
+WebJobs content
