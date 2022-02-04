@@ -67,6 +67,71 @@ Binding to a function is a way of declaratively connecting another resource to t
 Triggers and bindings let you avoid hardcoding access to other services.
 
 ## Trigger and binding definitions
-C# class library 	decorating methods and parameters with C# attributes
-Java decorating methods and parameters with Java annotations
-JavaScript/PowerShell/Python/TypeScript updating function.json schema
+- C# class library: 	decorating methods and parameters with C# attributes
+- Java: decorating methods and parameters with Java annotations
+- JavaScript/PowerShell/Python/TypeScript: updating function.json schema.
+
+For languages that rely on function.json, the portal provides a UI for adding bindings in the Integration tab.(you can also edit the file directly in the portal in the Code + test tab)
+
+. Since .NET class library functions and Java functions don't rely on function.json for binding definitions, they can't be created and edited in the portal. C# portal editing is based on C# script, which uses function.json instead of attributes.
+
+For languages that are dynamically typed such as JavaScript, use the dataType property in the function.json file. For example, to read the content of an HTTP request in binary format, set dataType to binary:
+
+```
+{
+    "dataType": "binary",
+    "type": "httpTrigger",
+    "name": "req",
+    "direction": "in"
+}
+```
+Other options for dataType are **stream** and **string**.
+
+
+## Binding direction
+
+All triggers and bindings have a direction property in the function.json file.
+
+- For triggers, the direction is always **in**
+- Input and output bindings use **in** and **out**
+- Some bindings support a special direction **inout**. If you use inout, only the
+Advanced editor is available via the Integrate tab in the portal.
+
+## Azure Functions trigger and binding example
+Suppose you want to write a new row to Azure Table storage whenever a new message appears in Azure Queue storage.
+
+Here's a function.json file for this scenario.
+
+```
+{
+  "bindings": [
+    {
+      "type": "queueTrigger",
+      "direction": "in",
+      "name": "order",
+      "queueName": "myqueue-items",
+      "connection": "MY_STORAGE_ACCT_APP_SETTING"
+    },
+    {
+      "type": "table",
+      "direction": "out",
+      "name": "$return",
+      "tableName": "outTable",
+      "connection": "MY_TABLE_STORAGE_ACCT_APP_SETTING"
+    }
+  ]
+}
+```
+
+- The first element in the array is the `Queue storage trigger`:
+-  `type` and `direction` identify the trigger
+- `name` identifies the function parameter that receives the queue message content.
+- `queueName` is the name of the queue to monitor
+- `connection` is the connection string .
+- The second element in the bindings array is the `Azure Table Storage output binding`.
+- `type` and `direction` identify the binding
+- `name` specifies how the function provides the new table row, in this case by using the function return value. 
+- `tableName` is the table name, 
+- `connection` is the connection string.
+
+To view and edit the contents of function.json in the Azure portal, click the **Advanced editor** option on the Integrate tab of your function.
