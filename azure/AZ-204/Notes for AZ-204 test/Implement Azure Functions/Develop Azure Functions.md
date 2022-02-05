@@ -135,3 +135,119 @@ Here's a function.json file for this scenario.
 - `connection` is the connection string.
 
 To view and edit the contents of function.json in the Azure portal, click the **Advanced editor** option on the Integrate tab of your function.
+
+## C# script example
+
+Notice that the name of the parameter that provides the queue message content is `order`; **this name is required because the name property value in function.json is `order`.**
+
+```
+#r "Newtonsoft.Json"
+
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+
+// From an incoming queue message that is a JSON object, add fields and write to Table storage
+// The method return value creates a new row in Table Storage
+public static Person Run(JObject order, ILogger log)
+{
+    return new Person() { 
+            PartitionKey = "Orders", 
+            RowKey = Guid.NewGuid().ToString(),  
+            Name = order["Name"].ToString(),
+            MobileNumber = order["MobileNumber"].ToString() };  
+}
+
+public class Person
+{
+    public string PartitionKey { get; set; }
+    public string RowKey { get; set; }
+    public string Name { get; set; }
+    public string MobileNumber { get; set; }
+}
+```
+
+## JavaScript example
+```
+// From an incoming queue message that is a JSON object, add fields and write to Table Storage
+// The second parameter to context.done is used as the value for the new row
+module.exports = function (context, order) {
+    order.PartitionKey = "Orders";
+    order.RowKey = generateRandomId(); 
+
+    context.done(null, order);
+};
+
+function generateRandomId() {
+    return Math.random().toString(36).substring(2, 15) +
+        Math.random().toString(36).substring(2, 15);
+}
+```
+
+## Class library example
+
+In a class library, the same trigger and binding information is provided by attributes instead of a function.json file. 
+
+```
+public static class QueueTriggerTableOutput
+{
+    [FunctionName("QueueTriggerTableOutput")]
+    [return: Table("outTable", Connection = "MY_TABLE_STORAGE_ACCT_APP_SETTING")]
+    public static Person Run(
+        [QueueTrigger("myqueue-items", Connection = "MY_STORAGE_ACCT_APP_SETTING")]JObject order,
+        ILogger log)
+    {
+        return new Person() {
+                PartitionKey = "Orders",
+                RowKey = Guid.NewGuid().ToString(),
+                Name = order["Name"].ToString(),
+                MobileNumber = order["MobileNumber"].ToString() };
+    }
+}
+
+public class Person
+{
+    public string PartitionKey { get; set; }
+    public string RowKey { get; set; }
+    public string Name { get; set; }
+    public string MobileNumber { get; set; }
+}
+```
+
+## Additional resources
+- https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-blob
+- https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-cosmosdb-v2
+- https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer?tabs=csharp
+- https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-http-webhook
+
+# Connect functions to Azure services
+Your function project references connection information by name from its configuration provider.This might refer to a connection string, but you cannot set the connection string directly in a function.json. Instead, you would set connection to the name of an environment variable that contains the connection string.
+
+The default configuration provider uses environment variables. These might be set by Application Settings when running in the Azure Functions service, or from the local settings file when developing locally.
+
+## Connection values
+When the connection name resolves to a single exact value, the runtime identifies the value as a connection string.
+Environment variables can be treated as a collection by using a shared prefix that ends in double underscores `__`. The group can then be referenced by setting the connection name to this prefix.
+
+For example, the connection property for a Azure Blob trigger definition might be `Storage1`. As long as there is no single string value configured with `Storage1` as its name, `Storage1__serviceUri` would be used for the serviceUri property of the connection. The connection properties are different for each service.
+
+## Configure an identity-based connection
+Some connections in Azure Functions are configured to use an identity instead of a secret.
+
+**Identity-based connections are not supported with Durable Functions.**
+
+When hosted in the Azure Functions service, identity-based connections use a managed identity (https://docs.microsoft.com/en-us/azure/app-service/overview-managed-identity?toc=%2Fazure%2Fazure-functions%2Ftoc.json&tabs=portal%2Chttp)
+
+The system-assigned identity is used by default, although a user-assigned identity can be specified with the `credential` and `clientID` properties.
+
+## Grant permission to the identity
+
+Whatever identity is being used must have permissions to perform the intended actions. This is typically done by assigning a role in Azure RBAC or specifying the identity in an access policy,
+
+**Some permissions might be exposed by the target service that are not necessary for all contexts. Where possible, adhere to the principle of least privilege, granting the identity only required privileges.**
+
+# Create an Azure Function by using Visual Studio Code
+(https://docs.microsoft.com/en-us/learn/modules/develop-azure-functions/5-create-function-visual-studio-code)
+
+# Knowledge check
+1. Which of the following is required for a function to run? Trigger
+2. Which of the following supports both the in and out direction settings? Bindings
