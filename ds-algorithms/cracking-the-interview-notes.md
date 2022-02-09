@@ -1,5 +1,5 @@
-## Core Data Structures, Algorithms, and Concepts
-Data Structures:
+# Core Data Structures, Algorithms, and Concepts
+## Data Structures
 
 - Linked Lists
 - Trees, Tries, Graphs
@@ -8,7 +8,7 @@ Data Structures:
 - Vectors / ArrayLists
 - Hash Tables
 
-Algorithms:
+## Algorithms
 
 - BFS
 - DPS
@@ -17,10 +17,16 @@ Algorithms:
 - Quick Sort
 - Concepts
 
-Concepts:
+## Concepts:
 
 - Bit Manipulation
 - Memory (Stack vs Heap)
 - Recursion
 - Dynamic Programming
 - Big O Time and Space
+
+## Optimize & Solve Technique #1: Look for BUD
+
+- Bottleneck
+- Unnecessary work 
+- Duplicated work

@@ -284,3 +284,127 @@ the `await (C#)` or `yield (JavaScript)` operator in an orchestrator function yi
 When an orchestration function is given more work to do, the orchestrator wakes up and re-executes the entire function from the start to rebuild the local state. During the replay, if the code tries to call a function (or do any other async work), the Durable Task Framework consults the execution history of the current orchestration. If it finds that the activity function has already executed and yielded a result, it replays that function's result and the orchestrator code continues to run.
 
 ## Features and patterns
+
+- Sub-orchestrations: Orchestrator functions can call activity functions, but also other orchestrator functions.
+
+- Durable timers: to implement delays or to set up timeout handling on async actions. Use durable timers in orchestrator functions instead of `Thread.Sleep` and `Task.Delay` (C#) or `setTimeout()` and `setInterval()` (JavaScript).
+
+- External events: 	Orchestrator functions can wait for external events to update an orchestration instance. Useful for human interactions or other external callbacks.
+
+- Error handling: Orchestrator functions can use the error-handling features of the programming language.
+
+- Critical sections: 	Orchestration instances are single-threaded so it isn't necessary to worry about race conditions. To mitigate race conditions when interacting with external systems, orchestrator functions can define critical sections using a `LockAsync` method in .NET.
+
+- Calling HTTP endpoints: Orchestrator functions aren't permitted to do I/O. The typical workaround for this limitation is to wrap any code that needs to do I/O in an activity function.
+
+- Passing multiple parameters: It isn't possible to pass multiple parameters directly (use an array of objects or  ValueTuples objects in .NET)
+
+# Control timing in Durable Functions
+Durable Functions provides durable timers for use in orchestrator functions to implement delays or to set up timeouts on async actions.
+
+You create a durable timer by calling the `CreateTimer` (.NET) method or the `createTimer` (JavaScript) method of the orchestration trigger binding. The method returns a task that completes on a specified date and time.
+
+## Timer limitations
+When you create a timer that expires at 4:30 pm, the underlying Durable Task Framework enqueues a message that becomes visible only at 4:30 pm. When running in the Azure Functions Consumption plan, the newly visible timer message will ensure that the function app gets activated on an appropriate VM.
+
+## Usage for delay
+The following example is issuing a billing notification every day for 10 days.
+
+```
+[FunctionName("BillingIssuer")]
+public static async Task Run(
+    [OrchestrationTrigger] IDurableOrchestrationContext context)
+{
+    for (int i = 0; i < 10; i++)
+    {
+        DateTime deadline = context.CurrentUtcDateTime.Add(TimeSpan.FromDays(1));
+        await context.CreateTimer(deadline, CancellationToken.None);
+        await context.CallActivityAsync("SendBillingEvent");
+    }
+}
+```
+
+## Usage for timeout
+```
+[FunctionName("TryGetQuote")]
+public static async Task<bool> Run(
+    [OrchestrationTrigger] IDurableOrchestrationContext context)
+{
+    TimeSpan timeout = TimeSpan.FromSeconds(30);
+    DateTime deadline = context.CurrentUtcDateTime.Add(timeout);
+
+    using (var cts = new CancellationTokenSource())
+    {
+        Task activityTask = context.CallActivityAsync("GetQuote");
+        Task timeoutTask = context.CreateTimer(deadline, cts.Token);
+
+        Task winner = await Task.WhenAny(activityTask, timeoutTask);
+        if (winner == activityTask)
+        {
+            // success case
+            cts.Cancel();
+            return true;
+        }
+        else
+        {
+            // timeout case
+            return false;
+        }
+    }
+}
+```
+
+***Use a `CancellationTokenSource` to cancel a durable timer (.NET) or call `cancel()`on the returned TimerTask (JavaScript) if your code will not wait for it to complete.**
+
+This cancellation mechanism doesn't terminate in-progress activity function or sub-orchestration executions. It simply allows the orchestrator function to ignore the result and move on.
+
+# Send and wait for events
+## Wait for events
+- `WaitForExternalEvent` (.NET)
+- `waitForExternalEvent` (JavaScript)
+- `wait_for_external_event` (Python)
+
+The listening orchestrator function declares the name of the event and the shape of the data it expects to receive.
+
+```
+[FunctionName("BudgetApproval")]
+public static async Task Run(
+    [OrchestrationTrigger] IDurableOrchestrationContext context)
+{
+    bool approved = await context.WaitForExternalEvent<bool>("Approval");
+    if (approved)
+    {
+        // approval granted - do the approved action
+    }
+    else
+    {
+        // approval denied - send a notification
+    }
+}
+```
+
+## Send events
+The `RaiseEventAsync` (.NET) or `raiseEvent` (JavaScript) method of the orchestration client binding sends the events that `WaitForExternalEvent` (.NET) or `waitForExternalEvent` (JavaScript) wait for.
+
+Internally, RaiseEventAsync (.NET) or raiseEvent (JavaScript) enqueues a message that gets picked up by the waiting orchestrator function. If the instance is not waiting on the specified event name, the event message is added to an in-memory queue.
+
+The RaiseEventAsync method takes eventName and eventData as parameters. The event data must be JSON-serializable.
+
+```
+[FunctionName("ApprovalQueueProcessor")]
+public static async Task Run(
+    [QueueTrigger("approval-queue")] string instanceId,
+    [DurableClient] IDurableOrchestrationClient client)
+{
+    await client.RaiseEventAsync(instanceId, "Approval", true);
+}
+```
+
+# Knowledge check
+Which of the following durable function types is used to read and update small pieces of state?
+
+Entity
+
+Which application pattern would you use for a durable function that is polling a resource until a specific condition is met?
+
+Monitor
