@@ -125,4 +125,4 @@ Physical partitions are collections of logical partitions
 
 Which of the below correctly lists the two components of a partition key?
 
-Key path, key value
+Key path, key value.
