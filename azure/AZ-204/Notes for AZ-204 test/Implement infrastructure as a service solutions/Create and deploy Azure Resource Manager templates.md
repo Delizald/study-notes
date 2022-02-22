@@ -161,3 +161,31 @@ Be careful using complete mode with copy loops. Any resources that aren't specif
 ## Incremental mode
 
 when redeploying an existing resource in incremental mode, the outcome is different. Specify all properties for the resource, not just the ones you're updating. A common misunderstanding is to think properties that aren't specified are left unchanged. If you don't specify certain properties, Resource Manager interprets the update as overwriting those values.
+
+## Set deployment mode
+when deploying with PowerShell, use the `Mode` parameter.
+
+```
+New-AzResourceGroupDeployment `
+  -Mode Complete `
+  -Name ExampleDeployment `
+  -ResourceGroupName ExampleResourceGroup `
+  -TemplateFile c:\MyTemplates\storage.json
+```
+
+when deploying with Azure CLI, use the `mode` parameter.
+```
+az deployment group create \
+  --mode Complete \
+  --name ExampleDeployment \
+  --resource-group ExampleResourceGroup \
+  --template-file storage.json
+```
+
+# Exercise: Create and deploy Azure Resource Manager templates by using Visual Studio Code
+https://docs.microsoft.com/en-us/learn/modules/create-deploy-azure-resource-manager-templates/6-create-deploy-resource-manager-template
+
+# Knowledge check
+
+1. What purpose does the outputs section of an Azure Resource Manager template serve? Return values from the deployed resources
+2. Which Azure Resource Manager template deployment mode deletes resources in a resource group that aren't specified in the template? Complete
