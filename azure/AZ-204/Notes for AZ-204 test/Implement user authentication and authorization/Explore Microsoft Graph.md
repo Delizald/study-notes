@@ -129,3 +129,45 @@ var newCalendar = await graphClient.Me.Calendars
 ```
 
 (https://docs.microsoft.com/en-us/graph/api/overview)
+
+# Apply best practices to Microsoft Graph
+
+## Authentication
+
+To access the data in Microsoft Graph, your application will need to acquire an OAuth 2.0 access token, and present it to Microsoft Graph in either of the following:
+
+- The HTTP Authorization request header, as a Bearer token
+- The graph client constructor, when using a Microsoft Graph client library
+
+## Consent and authorization
+
+Use least privilege. Only request permissions that are absolutely necessary, and only when you need them.
+Use the correct permission type based on scenarios
+   If you're building an interactive application where a signed in user is present, your application should use delegated permission.
+   if, your application runs without a signed-in user, such as a background service or daemon, your application should use application permissions.
+
+**Using application permissions for interactive scenarios can put your application at compliance and security risk. Be sure to check user's privileges to ensure they don't have undesired access to information, or are circumnavigating policies configured by an administrator.**
+
+Consider the end user and admin experience
+  - Consider who will be consenting to your application, either end users or administrators (https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent)
+  - Ensure that you understand the difference between static, dynamic and incremental consent (https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent)
+
+Consider multi-tenant applications
+  - Tenant administrators can disable the ability for end users to consent to applications. In this case, an administrator would need to consent on behalf of their users.
+  - Tenant administrators can set custom authorization policies such as blocking users from reading other user's profiles, or limiting self-service group creation to a limited set of users.
+
+## Handle responses effectively
+
+The following are some of the most important practices to follow to ensure that your application behaves reliably and predictably for your end users. For example:
+
+Pagination: Your application should always handle the possibility that the responses are paged in nature, and use the `@odata.nextLink` property to obtain the next paged set of results, until all pages of the result set have been read. The final page will not contain an `@odata.nextLink` property. For more details, see [paging](https://docs.microsoft.com/en-us/graph/paging).
+
+Evolvable enumerations:  is a mechanism that Microsoft Graph API uses to add new members to existing enumerations without causing a breaking change for applications. . If you design your application to handle unknown members as well, you can opt-in to receive those members by using an HTTP `Prefer` request header.
+
+## Storing data locally
+Your application should ideally make calls to Microsoft Graph to retrieve data in real time as necessary. You should only cache or store data locally if necessary for a specific scenario (https://docs.microsoft.com/en-us/legal/microsoft-apis/terms-of-use?context=/graph/context)
+
+# Knowledge check
+Which HTTP method below is used to update a resource with new values? PATCH
+Which of the components of the Microsoft 365 platform is used to deliver data external to Azure into Microsoft Graph services and applications? Microsoft Graph connectors
+Which of the following Microsoft Graph .NET SDK packages provides an authentication scenario-based wrapper of the Microsoft Authentication Library? Microsoft.Graph.Auth
