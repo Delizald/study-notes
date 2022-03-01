@@ -61,17 +61,16 @@ An App Service Plan also has a default condition that will be used if none of th
 
 Analysis is a multi-step process:
 
-
 1. In the first step, an autoscale rule aggregates the values retrieved for a metric for all instances across a period of time known as the **time grain**.  Each metric has its own time grain, in most cases this period is **1 minute**  The aggregated value is known as the **time aggregation**. The options available are **Average**, **Minimum**, **Maximum**, **Total**, **Last**, and **Count**.
 
 2. An autoscale rule that performs a further aggregation of the value calculated by the time aggregation over a longer, **user-specified period**, known as the **Duration**.
- - The minimum Duration is 5 minutes (If the Duration is set to 10 minutes for example, the autoscale rule will aggregate the 10 values calculated for the time grain.)
+ - The minimum Duration is `5 minutes` (If the Duration is set to 10 minutes for example, the autoscale rule will aggregate the 10 values calculated for the time grain.)
 3.  If the time grain statistic is set to Maximum, and the Duration of the rule is set to 10 minutes, the maximum of the 10 average values for the CPU percentage utilization will be used to determine whether the rule threshold has been crossed.
   
 
 ## Autoscale actions
 When a metric has crossed a threshold an Autoscale action is performed.
-An autoscale action uses an operator (>, <, == , etc) to determine how to react to the threshold.
+An autoscale action uses an operator `(>, <, == , etc)` to determine how to react to the threshold.
 
 An autoscale action can be:
 - **scale-out**: increases the number of instances. Typically use the greater than operator to compare the metric value to the threshold.
@@ -92,10 +91,10 @@ A single autoscale condition can contain several autoscale rules.
 
 However, the autoscale rules in an autoscale condition don't have to be directly related. You could define the following four rules in the same autoscale condition:
 
-If the HTTP queue length exceeds 10, scale out by 1
-If the CPU utilization exceeds 70%, scale out by 1
-If the HTTP queue length is zero, scale in by 1
-If the CPU utilization drops below 50%, scale in by 1
+- If the HTTP queue length exceeds 10, scale out by 1
+- If the CPU utilization exceeds 70%, scale out by 1
+- If the HTTP queue length is zero, scale in by 1
+- If the CPU utilization drops below 50%, scale in by 1
 
 # Enable autoscale in App Service
 Not all tiers support autoscaling:

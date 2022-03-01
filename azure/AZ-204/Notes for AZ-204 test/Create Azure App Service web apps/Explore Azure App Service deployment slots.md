@@ -1,10 +1,10 @@
 # Learning objectives
 After completing this module, you'll be able to:
 
-Describe the benefits of using deployment slots.
-Understand how slot swapping operates in App Service.
-Perform manual swaps and enable auto swap.
-Route traffic manually and automatically.
+- Describe the benefits of using deployment slots.
+- Understand how slot swapping operates in App Service.
+- Perform manual swaps and enable auto swap.
+- Route traffic manually and automatically.
 
 # Explore staging environments
 
@@ -164,11 +164,6 @@ By default, new slots are given a routing rule of 0%.
 
 # Knowledge check
 
-1. By default, all client requests to the app's production URL (http://<app_name>.azurewebsites.net) are routed to the production slot. One can automatically route a portion of the traffic to another slot. What is the default routing rule applied to new deployment slots? 
+1. By default, all client requests to the app's production URL (http://<app_name>.azurewebsites.net) are routed to the production slot. One can automatically route a portion of the traffic to another slot. What is the default routing rule applied to new deployment slots?  0%
 
-
-0%
-
-2. Some configuration elements follow the content across a swap (not slot specific), whereas other configuration elements stay in the same slot after a swap (slot specific). Which of the settings below are swapped?
-
-WebJobs content
+2. Some configuration elements follow the content across a swap (not slot specific), whereas other configuration elements stay in the same slot after a swap (slot specific). Which of the settings below are swapped? WebJobs content

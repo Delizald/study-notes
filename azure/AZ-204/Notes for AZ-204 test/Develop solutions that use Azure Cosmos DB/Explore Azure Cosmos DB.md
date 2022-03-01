@@ -92,17 +92,17 @@ The following simple considerations will help you make the right choice in many 
 
 ## SQL API and Table API
 - For many real-world scenarios, session consistency is optimal and it's the recommended option.
-- 
+  
 - If your application requires strong consistency, it is recommended that you use bounded staleness consistency level.
-- 
+  
 - If you need stricter consistency guarantees than the ones provided by session consistency and single-digit-millisecond latency for writes, it is recommended that you use bounded staleness consistency level.
-- 
+  
 - If your application requires eventual consistency, it is recommended that you use consistent prefix consistency level.
-- 
+  
 - If you need less strict consistency guarantees than the ones provided by session consistency, it is recommended that you use consistent prefix consistency level.
-- 
+  
 - If you need the highest availability and the lowest latency, then use eventual consistency level.
-- 
+  
 - If you need even higher data durability without sacrificing performance, you can create a custom consistency level at the application layer.
 
 ## Cassandra, MongoDB, and Gremlin APIs
@@ -112,9 +112,9 @@ The following simple considerations will help you make the right choice in many 
 ## Consistency guarantees in practice
 
 - When the consistency level is set to `bounded staleness`, Cosmos DB guarantees that the clients always read the value of a previous write, with a lag bounded by the staleness window.
-- 
+  
 - When the consistency level is set to `strong`, the staleness window is equivalent to zero, and the clients are guaranteed to read the latest committed value of the write operation.
-- 
+  
 - For the remaining three consistency levels, the staleness window is largely dependent on your workload. For example, if there are no write operations on the database, a read operation with eventual, session, or consistent prefix consistency levels is likely to yield the same results as a read operation with strong consistency level.
 
 If your Azure Cosmos account is configured with a consistency level other than the strong consistency you can find out the probability that your clients may get strong and consistent reads for your workloads by looking at the `Probabilistically Bounded Staleness`(PBS) metric.
@@ -143,9 +143,9 @@ This API stores data in column-oriented schema. on Cassandra API you don’t nee
 
 This API allows users to make graph queries and stores data as edges and vertices. Use this API for scenarios involving dynamic data, data with complex relations, data that is too complex to be modeled with relational databases. Gremlin API currently only supports OLTP scenarios.
 
-- `OLTP (On-line Transaction Processing)` is involved in the operation of a particular system. OLTP is characterized by a large number of short on-line transactions (INSERT, UPDATE, DELETE). The main emphasis for OLTP systems is put on very fast query processing, maintaining data integrity in multi-access environments and an effectiveness measured by number of transactions per second. In OLTP database there is detailed and current data, and schema used to store transactional databases is the entity model (usually 3NF). It involves Queries accessing individual record like Update your Email in Company database.
+- `OLTP (On-line Transaction Processing)` is involved in the operation of a particular system. OLTP is characterized by a large number of short on-line transactions (INSERT, UPDATE, DELETE). `The main emphasis for OLTP systems is put on very fast query processing`, maintaining data integrity in multi-access environments and an effectiveness measured by number of transactions per second. In OLTP database there is detailed and current data, and schema used to store transactional databases is the entity model (usually 3NF). It involves Queries accessing individual record like Update your Email in Company database.
  
-- `OLAP (On-line Analytical Processing)` deals with Historical Data or Archival Data. OLAP is characterized by relatively low volume of transactions. Queries are often very complex and involve aggregations. For OLAP systems a response time is an effectiveness measure. OLAP applications are widely used by Data Mining techniques. In OLAP database there is aggregated, historical data, stored in multi-dimensional schemas (usually star schema). Sometime query need to access large amount.
+- `OLAP (On-line Analytical Processing)` deals with Historical Data or Archival Data. `OLAP is characterized by relatively low volume of transaction`s. Queries are often very complex and involve aggregations. For OLAP systems a response time is an effectiveness measure. `OLAP applications are widely used by Data Mining techniques`. In OLAP database there is aggregated, historical data, stored in multi-dimensional schemas (usually star schema). Sometime query need to access large amount.
 
 ## Discover request units
 
@@ -171,7 +171,7 @@ The cost to do a point read, which is fetching a single item by its ID and parti
 
 # Knowledge check
 
-1. When setting up Azure Cosmos DB there are three account type options. Which of the account type options below is used to specify the number of RUs for an application on a per-second basis?
+When setting up Azure Cosmos DB there are three account type options. Which of the account type options below is used to specify the number of RUs for an application on a per-second basis?
 
 Provisioned throughput
 

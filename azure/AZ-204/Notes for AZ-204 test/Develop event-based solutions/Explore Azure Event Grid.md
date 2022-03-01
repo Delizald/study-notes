@@ -74,21 +74,22 @@ You can find the JSON schema for the Event Grid event and each Azure publisher's
 
 ## Event properties
 Property	Type	Required	Description
-topic	string	No. If not included, Event Grid will stamp onto the event. If included it must match the event grid topic Azure Resource Manager ID exactly.	Full resource path to the event source. This field isn't writeable. Event Grid provides this value.
 
-subject	string	Yes	Publisher-defined path to the event subject.
+- topic	string	No. If not included, Event Grid will stamp onto the event. If included it must match the event grid topic Azure Resource Manager ID exactly.	Full resource path to the event source. This field isn't writeable. Event Grid provides this value.
 
-eventType	string	Yes	One of the registered event types for this event source.
+- subject	string	Yes	Publisher-defined path to the event subject.
+   
+- eventType	string	Yes	One of the registered event types for this event source.
+  
+- eventTime	string	Yes	The time the event is generated based on the provider's UTC time.
+  
+- id	string	Yes	Unique identifier for the event.
+  
+- data	object	No	Event data specific to the resource provider.
+  
+- dataVersion	string	No. If not included it will be stamped with an empty value.	The schema version of the data object. The publisher defines the schema version.
 
-eventTime	string	Yes	The time the event is generated based on the provider's UTC time.
-
-id	string	Yes	Unique identifier for the event.
-
-data	object	No	Event data specific to the resource provider.
-
-dataVersion	string	No. If not included it will be stamped with an empty value.	The schema version of the data object. The publisher defines the schema version.
-
-metadataVersion	string	No. If not included, Event Grid will stamp onto the event. If included, must match the Event Grid Schema metadataVersion exactly (currently, only 1).	The schema version of the event metadata. Event Grid defines the schema of the top-level properties. Event Grid provides this value.
+- metadataVersion	string	No. If not included, Event Grid will stamp onto the event. If included, must match the Event Grid Schema metadataVersion exactly (currently, only 1).	The schema version of the event metadata. Event Grid defines the schema of the top-level properties. Event Grid provides this value.
 
 ## CloudEvents v1.0 schema
 
@@ -97,6 +98,7 @@ Azure Event Grid natively supports events in the JSON implementation of CloudEve
 CloudEvents simplifies interoperability by providing a common event schema for publishing, and consuming cloud based events.
 
 Here is an example of an Azure Blob Storage event in CloudEvents format:
+```
 {
     "specversion": "1.0",
     "type": "Microsoft.Storage.BlobCreated",  
@@ -120,6 +122,7 @@ Here is an example of an Azure Blob Storage event in CloudEvents format:
         }
     }
 }
+```
 
 description for fields: https://github.com/cloudevents/spec/blob/v1.0/spec.md#required-attributes
 
@@ -147,12 +150,12 @@ The following table describes the types of endpoints and errors for which retry 
 
 Event Grid waits `30 seconds` for a response after delivering a message. After 30 seconds, if the endpoint hasn’t responded, the message is queued for retry. Event Grid uses an exponential backoff retry policy for event delivery. 
 
-If the endpoint responds within 3 minutes, Event Grid will attempt to remove the event from the retry queue on a best effort basis but duplicates may still be received
+If the endpoint responds within `3 minutes`, Event Grid will attempt to remove the event from the retry queue on a best effort basis but duplicates may still be received
 
 ## Retry policy
 
-- Maximum number of attempts - The value must be an integer between 1 and 30. The default value is 30.
-- Event time-to-live (TTL) - The value must be an integer between 1 and 1440. The default value is 1440 minutes
+- Maximum number of attempts - The value must be an integer between 1 and 30. `The default value is 30`.
+- Event time-to-live (TTL) - The value must be an integer between 1 and 1440. `The default value is 1440 minutes`
 
 ```
 az eventgrid event-subscription create \

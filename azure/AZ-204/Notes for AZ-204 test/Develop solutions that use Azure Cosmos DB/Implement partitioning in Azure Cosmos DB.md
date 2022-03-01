@@ -14,9 +14,9 @@ a container holds items. Each item has a unique value for the UserID property. I
 
 ## Logical partitions
 
-A logical partition consists of a set of items that have the same partition key.
+- A logical partition consists of a set of items that have the same partition key.
 
-A logical partition also defines the scope of database transactions. You can update items within a logical partition by using a transaction with snapshot isolation. When new items are added to a container, new logical partitions are transparently created by the system. You don't have to worry about deleting a logical partition when the underlying data is deleted.
+- A logical partition also defines the scope of database transactions. You can update items within a logical partition by using a transaction with snapshot isolation. When new items are added to a container, new logical partitions are transparently created by the system. You don't have to worry about deleting a logical partition when the underlying data is deleted.
 
 ## Physical partitions
 
@@ -27,7 +27,7 @@ Unlike logical partitions, physical partitions are an internal implementation of
 The number of physical partitions in your container depends on the following:
 
 - The number of throughput provisioned (each individual physical partition can provide a throughput of up to 10,000 request units per second). The 10,000 RU/s limit for physical partitions implies that logical partitions also have a 10,000 RU/s limit, as each logical partition is only mapped to one physical partition.
-- 
+ 
 - The total data storage (each individual physical partition can store up to 50GB data).
 
 Focus on logical partitions instead of physical partitions.
@@ -52,7 +52,7 @@ For all containers, your partition key should:
 
 For large read-heavy containers you might want to choose a partition key that appears frequently as a filter in your queries.
 
-efficient routing (https://docs.microsoft.com/en-us/azure/cosmos-db/sql/how-to-query-container#in-partition-query)
+efficient routing: (https://docs.microsoft.com/en-us/azure/cosmos-db/sql/how-to-query-container#in-partition-query)
 
 If most of your workload's requests are queries and most of your queries have an equality filter on the same property, this property can be a good partition key choice.
 

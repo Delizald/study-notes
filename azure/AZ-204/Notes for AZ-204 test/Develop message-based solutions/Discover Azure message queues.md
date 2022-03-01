@@ -40,19 +40,21 @@ Service Bus offers a standard and premium tier.
 
 Some high-level differences are highlighted in the following table.
 
-SERVICE BUS TIERS
-Premium	
-High throughput
-Predictable performance
-Fixed pricing
-Ability to scale workload up and down
-Message size up to 1 MB. Support for message payloads up to 100 MB currently exists in preview.
+SERVICE BUS TIERS:
 
-Standard
-Variable throughput
-Variable latency
-Pay as you go variable pricing
-Message size up to 256 KB
+Premium	
+- High throughput
+- Predictable performance
+- Fixed pricing
+- Ability to scale workload up and down
+- Message size up to 1 MB. Support for message payloads up to 100 MB currently exists in preview.
+
+Standard:
+
+- Variable throughput
+- Variable latency
+- Pay as you go variable pricing
+- Message size up to 256 KB
 
 ## Advanced features
 - `Message sessions`	To create a first-in, first-out (FIFO) guarantee in Service Bus, use sessions. Message sessions enable exclusive, ordered handling of unbounded sequences of related messages.

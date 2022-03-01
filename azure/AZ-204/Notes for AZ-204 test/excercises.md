@@ -1,0 +1,15 @@
+https://docs.microsoft.com/en-us/learn/modules/azure-event-grid/7-event-grid-filtering
+https://docs.microsoft.com/en-us/learn/modules/discover-azure-message-queue/6-send-receive-messages-service-bus
+https://docs.microsoft.com/en-us/learn/modules/explore-azure-cosmos-db/8-create-cosmos-db-resources-portal
+https://docs.microsoft.com/en-us/learn/modules/work-with-cosmos-db/3-exercise-work-cosmos-db-dotnet
+https://docs.microsoft.com/en-us/learn/modules/explore-azure-blob-storage/6-create-block-blob-storage-account
+https://docs.microsoft.com/en-us/learn/modules/work-azure-blob-storage/3-develop-blob-storage-dotnet
+https://docs.microsoft.com/en-us/learn/modules/work-azure-blob-storage/4-manage-container-properties-metadata-dotnet
+https://docs.microsoft.com/en-us/learn/modules/explore-api-management/8-import-api
+https://docs.microsoft.com/en-us/learn/modules/create-deploy-azure-resource-manager-templates/6-create-deploy-resource-manager-template
+https://docs.microsoft.com/en-us/learn/modules/publish-container-image-to-azure-container-registry/6-build-run-image-azure-container-registry
+https://docs.microsoft.com/en-us/learn/modules/provision-virtual-machines-azure/5-azure-virtual-machine-azure-cli
+https://docs.microsoft.com/en-us/learn/modules/create-run-container-images-azure-container-instances/3-run-azure-container-instances-cloud-shell
+https://docs.microsoft.com/en-us/learn/modules/implement-azure-key-vault/5-set-retrieve-secret-azure-key-vault
+https://docs.microsoft.com/en-us/learn/modules/implement-authentication-by-using-microsoft-authentication-library/4-interactive-authentication-msal
+https://docs.microsoft.com/en-us/learn/modules/develop-for-azure-cache-for-redis/5-console-app-azure-cache-redis

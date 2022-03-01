@@ -7,7 +7,9 @@ After completing this module, you'll be able to:
 - Create virtual app to directory mappings.
 
 # Configure application settings
-app settings are variables passed as environment variables to the application code. For Linux apps and custom containers, App Service passes app settings to the container using the --env flag to set the environment variable in the container.
+app settings are variables passed as environment variables to the application code. 
+
+For Linux apps and custom containers, App Service passes app settings to the container using the --env flag to set the environment variable in the container.
 
 Application settings can be accessed by navigating to your app's management page and selecting **Configuration > Application Settings**.
 
@@ -21,12 +23,12 @@ You can keep development settings (for example, local MySQL password) in Web.con
 
 To add a new app setting, click New application setting. If you are using deployment slots you can specify if your setting is swappable or no. To edit a setting, click the Edit button on the right side. When finished, click Update. Don't forget to click Save back in the Configuration page.
 
-** In a default, or custom, Linux container any nested JSON key structure in the app setting name like ApplicationInsights:InstrumentationKey needs to be configured in App Service as ApplicationInsights__InstrumentationKey for the key name. In other words, any : should be replaced by __ (double underscore). **
+**In a default, or custom, Linux container any nested JSON key structure in the app setting name like ApplicationInsights:InstrumentationKey needs to be configured in App Service as ApplicationInsights__InstrumentationKey for the key name. In other words, any : should be replaced by __ (double underscore).**
 
 ## Editing application settings in bulk
 
 To add or edit app settings in bulk, click the Advanced edit button. When finished, click Update. App settings have the following JSON formatting:
-
+```
 [
   {
     "name": "<key-1>",
@@ -40,17 +42,17 @@ To add or edit app settings in bulk, click the Advanced edit button. When finish
   },
   ...
 ]
-
+```
 ## Configure connection strings
 
-**For ASP.NET and ASP.NET Core developers the values you set in App Service override the ones in Web.config. **
+**For ASP.NET and ASP.NET Core developers the values you set in App Service override the ones in Web.config.**
 
 Connection strings are always encrypted when stored (encrypted-at-rest).
 
 **There is one case where you may want to use connection strings instead of app settings for non-.NET languages: certain Azure database types are backed up along with the app only if you configure a connection string for the database in your App Service app.**
 
 Below is an example of connection strings in JSON formatting that you would use for bulk adding or editing.
-
+```
 [
   {
     "name": "name-1",
@@ -66,6 +68,7 @@ Below is an example of connection strings in JSON formatting that you would use 
   },
   ...
 ]
+```
 
 ## Configure general settings
 In the **Configuration > General** settings section you can configure some common settings for your app. Some settings require you to scale up to higher pricing tiers.
@@ -139,7 +142,6 @@ Containerized apps include all Linux apps and also the Windows and Linux custom 
 - In App Service logs set the Application logging option to File System.
 - In Quota (MB), specify the disk quota for the application logs. In Retention Period (Days), set the number of days the logs should be retained.
 
-
 ### Enable web server logging
 - For Web server logging, select Storage to store logs on blob storage, or File System to store logs on the App Service file system.
 
@@ -157,10 +159,10 @@ Any information written to files ending in .txt, .log, or .htm that are stored i
 
 **Some types of logging buffer write to the log file, which can result in out of order events in the stream. For example, an application log entry that occurs when a user visits a page may be displayed in the stream before the corresponding HTTP log entry for the page request.**
 
-- **Azure portal** :To stream logs in the Azure portal, navigate to your app and select **Log stream**.
+- **Azure portal**: To stream logs in the Azure portal, navigate to your app and select **Log stream**.
 - **Azure CLI**: `az webapp log tail --name appname --resource-group myResourceGroup`
 
-- **Local console** - To stream logs in the local console, install Azure CLI and sign in to your account. Once signed in, follow the instructions for Azure CLI above.
+- **Local console**: To stream logs in the local console, install Azure CLI and sign in to your account. Once signed in, follow the instructions for Azure CLI above.
 
 ### Access log files
 For logs stored in the App Service file system, the easiest way is to download the ZIP file in the browser at:
@@ -243,14 +245,17 @@ An effective implementation of feature management consists of at least:
 - A separate repository that stores the feature flags and their current states.
 
 ## Feature flag usage in code
+```
 `if (featureFlag) {
   // Run the following code
 }`
+```
 
 ## Feature flag declaration
 When a feature flag has multiple filters, the filter list is traversed in order until one of the filters determines the feature should be enabled. 
 The feature manager supports appsettings.json as a configuration source for feature flags. The following example shows how to set up feature flags in a JSON file:
 
+```
 "FeatureManagement": {
     "FeatureA": true, // Feature flag set to on
     "FeatureB": false, // Feature flag set to off
@@ -265,6 +270,7 @@ The feature manager supports appsettings.json as a configuration source for feat
         ]
     }
 }
+```
 
 ## Feature flag repository
 To use feature flags effectively, you need to externalize all the feature flags used in an application.

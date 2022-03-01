@@ -1,6 +1,6 @@
 # Azure App Service
 
-- Azure App Service is an HTTP-based service for hosting web applications, REST APIs, and mobile back ends. You can develop in your favorite language. Applications run and scale with ease on both Windows and Linux-based environments.
+Azure App Service is an HTTP-based service for hosting web applications, REST APIs, and mobile back ends. You can develop in your favorite language. Applications run and scale with ease on both Windows and Linux-based environments.
 
 ## Built-in auto scale support
 Depending on the usage of an app you can scale your app up/down the resources.
@@ -181,19 +181,23 @@ To find the outbound IP addresses currently used by your app in the Azure portal
 
 You can find the same information by running the following command in the Cloud Shell. They are listed in the Additional Outbound IP Addresses field.
 
-`az webapp show \
+```
+az webapp show \
     --resource-group <group_name> \
     --name <app_name> \ 
     --query outboundIpAddresses \
-    --output tsv`
+    --output tsv
+```
 
 To find all possible outbound IP addresses for your app, regardless of pricing tiers, run the following command in the Cloud Shell.
 
+```
 `az webapp show \
     --resource-group <group_name> \ 
     --name <app_name> \ 
     --query possibleOutboundIpAddresses \
-    --output tsv`
+    --output tsv
+```
 
 ##  Create a static HTML web app by using Azure Cloud Shell
 The `az webapp up` command makes it easy to create and update web apps. When executed it performs the following actions:
@@ -213,8 +217,8 @@ This command may take a few minutes to run. While running, it displays informati
 - `git clone https://github.com/app`
 - `az webapp up --location <myLocation> --name <myAppName> --html`
 
-
-`{
+```
+{
 "app_url": "https://<myAppName>.azurewebsites.net",
 "location": "westeurope",
 "name": "<app_name>",
@@ -225,7 +229,7 @@ This command may take a few minutes to run. While running, it displays informati
 "src_path": "/home/<username>/demoHTML/html-docs-hello-world ",
 < JSON data removed for brevity. >
 }
-`
+````
 
 Open a browser and go to http://<myAppName>.azurewebsites.net
 
